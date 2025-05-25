@@ -2,6 +2,7 @@
 Repositório criado exclusivamente para fins acadêmicos, destinado à publicação do artigo para avaliação na disciplina.
 
 Abstract. The Internet of Things (IoT) enables real-time environmental monitoring, improving water leakage prevention and household management. This paper presents an IoT-based system for monitoring humidity levels in residential and commercial environments, using a moisture sensor connected to a microcontroller. The system provides real-time data, activating an indicator light when excessive moisture is detected, allowing for quick intervention. This solution aims to prevent structural damage, mold growth, and unnecessary water waste. Additionally, previous studies and IoT advancements in humidity monitoring are discussed.
+
 Resumo. A Internet das Coisas (IoT) possibilita o monitoramento ambiental em tempo real, aprimorando a prevenção de vazamentos de água e a gestão doméstica. Este artigo apresenta um sistema baseado em IoT para monitoramento da umidade em ambientes residenciais e comerciais, utilizando um sensor de umidade conectado a um microcontrolador. O sistema fornece dados em tempo real, acionando uma luz indicadora quando é detectada umidade excessiva, permitindo uma intervenção rápida. Esta solução busca prevenir danos estruturais, proliferação de mofo e desperdício desnecessário de água. Além disso, são discutidos estudos anteriores e os avanços da IoT no monitoramento de umidade.
 
 Introdução
