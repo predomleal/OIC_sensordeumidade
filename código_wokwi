@@ -1,0 +1,83 @@
+#include <WiFi.h>
+#include <PubSubClient.h>
+
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+const char* mqttServer = "broker.hivemq.com";
+const int mqttPort = 1883;
+const char* topic = "umidade/sensor01";
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+// Pinos dos componentes
+const int potPin = 34;
+const int ledVerde = 18;
+const int ledAmarelo = 19;
+const int ledVermelho = 21;
+const int buzzer = 22;
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  Serial.print("Conectando ao Wi-Fi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println(" Conectado!");
+
+  client.setServer(mqttServer, mqttPort);
+
+  pinMode(ledVerde, OUTPUT);
+  pinMode(ledAmarelo, OUTPUT);
+  pinMode(ledVermelho, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  if (!client.connected()) {
+    while (!client.connected()) {
+      Serial.print("Conectando ao MQTT...");
+      if (client.connect("ESP32Client")) {
+        Serial.println("conectado!");
+        client.subscribe("umidade/sensor01/cmd");
+      } else {
+        Serial.print("falha, rc=");
+        Serial.print(client.state());
+        delay(2000);
+      }
+    }
+  }
+
+  client.loop();
+
+  int valor = analogRead(potPin);
+  String estado;
+
+  if (valor > 3000) {
+    estado = "seco";
+    digitalWrite(ledVerde, HIGH);
+    digitalWrite(ledAmarelo, LOW);
+    digitalWrite(ledVermelho, LOW);
+    noTone(buzzer);
+  } else if (valor > 1500) {
+    estado = "alerta";
+    digitalWrite(ledVerde, LOW);
+    digitalWrite(ledAmarelo, HIGH);
+    digitalWrite(ledVermelho, LOW);
+    noTone(buzzer);
+  } else {
+    estado = "vazamento";
+    digitalWrite(ledVerde, LOW);
+    digitalWrite(ledAmarelo, LOW);
+    digitalWrite(ledVermelho, HIGH);
+    tone(buzzer, 1000);
+  }
+
+  String payload = "{\"umidade\":" + String(valor) + ",\"estado\":\"" + estado + "\"}";
+  Serial.println(payload);
+  client.publish(topic, payload.c_str());
+
+  delay(2000);
+}
